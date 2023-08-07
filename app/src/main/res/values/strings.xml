@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Spotifyclone</string>
+    <string name="Notification_Description">-</string>
+    <string name="Notification_cannel_name">0</string>
 </resources>
