@@ -27,7 +27,7 @@ class MusicPlayerNotificationListener(  private val musicservice:musicservice):P
         super.onNotificationPosted(notificationId, notification, ongoing)
         musicservice.apply {
             if(ongoing && !isforeground) {
-                ContextCompat.startForegroundService(this, Intent(this,this::class.java))
+                ContextCompat.startForegroundService(this, Intent(applicationContext,this::class.java))
                 startForeground(NOTIFICATION_ID,notification)
                 isforeground=true
             }

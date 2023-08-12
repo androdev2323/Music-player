@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.media.MediaSession2Service.MediaNotification
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -40,15 +41,18 @@ notifcationlistener: PlayerNotificationManager.NotificationListener,
  }
 
  inner class DescriptionAdapter(var mediaControllerCompat: MediaControllerCompat):PlayerNotificationManager.MediaDescriptionAdapter{
-  override fun getCurrentContentTitle(player: Player): CharSequence {
+  override fun getCurrentContentTitle(player: Player): CharSequence{
+
    return mediaControllerCompat.metadata.description.title.toString()
   }
 
   override fun createCurrentContentIntent(player: Player): PendingIntent? {
   return mediaControllerCompat.sessionActivity
+
   }
 
   override fun getCurrentContentText(player: Player): CharSequence? {
+
 return mediaControllerCompat.metadata.description.subtitle.toString()
   }
 

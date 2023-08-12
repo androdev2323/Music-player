@@ -6,6 +6,7 @@ import android.media.session.MediaController
 import android.os.Bundle
 import android.service.media.MediaBrowserService
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
@@ -16,7 +17,9 @@ import com.example.spotifyclone.exoplayer.callbackd.MusicPlayerEventListener
 import com.example.spotifyclone.exoplayer.callbackd.MusicPlayerNotificationListener
 import com.example.spotifyclone.exoplayer.callbackd.MusicPlayerPlaybackPrepare
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
+import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ServiceScoped
@@ -36,6 +39,10 @@ class musicservice: MediaBrowserServiceCompat() {
     private val servicejob= Job()
     private val servicescope= CoroutineScope(Dispatchers.Main + servicejob)
     private lateinit var musicplayereventlistener:MusicPlayerEventListener
+    companion object {
+        var curSongDuration = 0L
+            private set
+    }
 
     private lateinit var mediasession:MediaSessionCompat
     private lateinit var mediasessionconnector:MediaSessionConnector
@@ -71,6 +78,7 @@ var isforeground=false
         mediasessionconnector = MediaSessionConnector(mediasession)
         mediasessionconnector.setPlaybackPreparer(muicplaybackpreparer)
         mediasessionconnector.setPlayer(exolayer)
+        mediasessionconnector.setQueueNavigator(MusicQueueNavigator())
         exolayer.addListener(musicplayereventlistener)
 
         musicNotificationManager =
@@ -79,9 +87,9 @@ var isforeground=false
                 mediasession.sessionToken,
                 MusicPlayerNotificationListener(this),
                 {
-
-
+                    curSongDuration = exolayer.duration
                 })
+
         musicNotificationManager.shownotification(exolayer)
     }
 
@@ -90,6 +98,11 @@ var isforeground=false
             exolayer.prepare(firebaseMusicsource.asMediasource(datasourcefactory))
         exolayer.seekTo(cursongindex,0)
         exolayer.playWhenReady=PlayNow
+    }
+    private inner class MusicQueueNavigator : TimelineQueueNavigator(mediasession) {
+        override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
+            return firebaseMusicsource.metasong[windowIndex].description
+        }
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -100,6 +113,7 @@ var isforeground=false
     override fun onDestroy() {
         super.onDestroy()
         servicescope.cancel()
+
         exolayer.removeListener(musicplayereventlistener)
         exolayer.release()
 

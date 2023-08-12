@@ -7,6 +7,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaControllerCompat
 import android.util.Log
 import androidx.core.net.toUri
 import com.example.spotifyclone.data.remote.Musicdatabase
@@ -41,6 +42,7 @@ class FirebaseMusicsource @Inject constructor(private val musicdatabase: Musicda
             .build()
     }
 
+
      withContext(Dispatchers.Main) {
          state = STATE.STATE_INTIALIZED
      }
@@ -53,6 +55,7 @@ class FirebaseMusicsource @Inject constructor(private val musicdatabase: Musicda
                 .createMediaSource(MediaItem.fromUri(song.getString(METADATA_KEY_MEDIA_URI).toUri()))
             concatenatingMediaSource.addMediaSource(mediaSource)
         }
+
         return  concatenatingMediaSource
     }
     fun asmediaitem(): MutableList<MediaBrowserCompat.MediaItem> {

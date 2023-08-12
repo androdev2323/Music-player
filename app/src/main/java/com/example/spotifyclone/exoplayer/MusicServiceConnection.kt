@@ -82,7 +82,9 @@ class MusicServiceConnection @Inject constructor (@ApplicationContext Context:Co
         override fun onConnected() {
             mediaController=MediaControllerCompat(Context,mediabrowser.sessionToken).apply {
                 registerCallback(MediaControllercallback())
+
             }
+
 
 
            _isconected.postValue(Event(Resource.success(true)))

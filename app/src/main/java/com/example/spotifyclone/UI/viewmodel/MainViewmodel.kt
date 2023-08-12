@@ -48,7 +48,7 @@ class MainViewmodel @Inject constructor(  private val  musicservice:MusicService
                         it.description.title.toString()
                     )
                 }
-                Log.d("yo50",item[0].toString())
+
 
 
                 _mediaitem.postValue(Resource.success(item))
@@ -75,6 +75,7 @@ class MainViewmodel @Inject constructor(  private val  musicservice:MusicService
 
     fun playortogglesong(mediaitem:Songs,toggle:Boolean=false){
         val music=playbackstate.value?.isprepared ?: false
+
         if(music && mediaitem.mediaid == currplayingsong.value?.getString(METADATA_KEY_MEDIA_ID)){
           playbackstate.value?.let { playbackstate->
           when{

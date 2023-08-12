@@ -39,7 +39,7 @@ class HomeFragment:Fragment(R.layout.fragment_home) {
 
         setuprecyleview()
         subscribeobservers()
-        songadapter.setonItemclickistener {
+        songadapter.setItemclickistener {
             viewmodel.playortogglesong(it)
         }
     }
