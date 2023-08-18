@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
@@ -50,6 +53,32 @@ class MainActivity : AppCompatActivity() {
                 mainViewmodel.playortogglesong(it,true)
             }
         }
+        swipesongadapter.setItemclickistener {
+            navHostFragment.findNavController().navigate(R.id.globalactionTosongfragment)
+        }
+
+           navHostFragment.findNavController().addOnDestinationChangedListener{
+                   _,destination,_ ->
+               when(destination.id){
+                   R.id.songFragment-> hidebottombar()
+                   R.id.homeFragment->showbottombar()
+                   else -> showbottombar()
+               }
+           }
+
+    }
+
+    fun hidebottombar(){
+        ivCurSongImage.isVisible=false
+        ivPlayPause.isVisible=false
+        vpSong.isVisible=false
+
+    }
+    fun showbottombar(){
+        ivCurSongImage.isVisible=true
+        ivPlayPause.isVisible=true
+        vpSong.isVisible=true
+
     }
 
     private fun switchviewpager(song:Songs){
